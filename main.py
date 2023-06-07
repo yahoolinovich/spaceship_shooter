@@ -22,8 +22,8 @@ space = pygame.image.load('stars_space_dark_139528_2048x1152.jpg')
 space.convert()
 
 # Sound FX
-music = pygame.mixer.Sound('Dark Forest OST Ambient.mp3')
-music.play()
+# music = pygame.mixer.Sound('Dark Forest OST Ambient.mp3')
+# music.play()
 laser_sound = pygame.mixer.Sound('Laser Gun - Sound Effect.mp3')
 
 # Timer
