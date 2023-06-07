@@ -6,7 +6,7 @@ pygame.init()
 width = 1600
 height = 900
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("BOB")
+pygame.display.set_caption("Space Shooter")
 
 
 # X wing properties
@@ -18,8 +18,8 @@ position_rect = xwing.get_rect()
 position_rect.center = (width // 8, height // 2)
 enemyx_wing = pygame.transform.rotate(pygame.transform.scale(img_file, img_size), 90)
 # Background
-# space = pygame.image.load('space.png')
-# space.convert()
+space = pygame.image.load('stars_space_dark_139528_2048x1152.jpg')
+space.convert()
 
 # Sound FX
 music = pygame.mixer.Sound('Dark Forest OST Ambient.mp3')
@@ -36,7 +36,7 @@ red = (255, 0, 0)
 teal = (0, 255, 255)
 yellow = (255, 255, 0)
 black = (0, 0, 0)
-player_vel = 15
+player_vel = 1
 enemy_vel = 2
 enemy_list = []
 bullet_vel = 20
@@ -48,19 +48,18 @@ FPS = 90
 clock = pygame.time.Clock()
 txt = pygame.font.Font(None, 50)
 game_active = True
+pygame.event.set_grab(True)
+pygame.mouse.set_visible(False)
 
 
 def handle_keys(rect):
     key = pygame.key.get_pressed()
 
-    # if key[pygame.K_a] and rect.x > 0:
-    #     rect.x -= player_vel
-    # if key[pygame.K_d] and rect.x < width - img_size[0]:
-    #     rect.x += player_vel
-    if key[pygame.K_w] and rect.y > 0:
-        rect.y -= player_vel
-    if key[pygame.K_s] and rect.y < height - img_size[1]:
-        rect.y += player_vel
+    mouse_x,mouse_y = pygame.mouse.get_rel()
+    if mouse_y < 0 and rect.y > 0:
+        rect.y += player_vel * mouse_y
+    if mouse_y > 0 and rect.y < height - img_size[1]:
+        rect.y += player_vel * mouse_y
 
 
 def fire_bullets(bul):
@@ -110,6 +109,9 @@ while 1:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            pygame.quit()
+            exit()
         if event.type == pygame.MOUSEBUTTONDOWN and len(bullet_list) % 2 == 0: # and len(bullets) < max_bullets:
             bullet = pygame.Rect(position_rect.x + 50, position_rect.y + 3, 50, 2)
             bullets.append(bullet)
@@ -124,8 +126,8 @@ while 1:
             random_y = rd.randint(100, height - 100)
             enemy_rect = enemyx_wing.get_rect(center=(width + 100, random_y))
             enemy_list.append(enemy_rect)
-            if enemy_vel < 20:
-                enemy_vel *= 1.02
+            if enemy_vel < 19:
+                enemy_vel *= 1.01
             print(f'Enemy Velocity: {enemy_vel}\nSpawn Time: {spawn_time}')
             if spawn_time > 600:
                 spawn_time = int(spawn_time / 1.05)
@@ -133,7 +135,7 @@ while 1:
 
     if game_active:
         # Display Settings
-        screen.fill(black)
+        screen.blit(space,(0,0))
         handle_keys(position_rect)
         screen.blit(xwing, position_rect)
         enemy_spawn()
